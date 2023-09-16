@@ -1,32 +1,34 @@
 from utils.common import *
 from utils.librairies import *
 
-class formatFinal(object):
-    GIF = ".gif"
-    MP4 = ".mp4"
-
 def conversion(chemin, targetFormat):
     sortie = os.path.splitext(chemin)[0] + targetFormat
 
     print(f"""
-Conversion du fichier : 
+[{lr}-{r}] Conversion du fichier : 
           {chemin}
-Vers :
+[{g}+{r}] Vers :
           {sortie}
 """)
 
     reader = imageio.get_reader(chemin)
-    vid = imageio.get_reader(chemin, 'ffmpeg')
     fps = reader.get_meta_data()['fps']
+    durée = reader.get_meta_data()['duration']
+    frames = int(durée * fps)
 
     writer = imageio.get_writer(sortie, duration=fps)
+
+    bar = progressbar.ProgressBar(max_value=frames, prefix=f"Frames traitées :")
+
     for i,im in enumerate(reader):
-        sys.stdout.write(f"\rFrames traitées : {i}/{vid.count_frames()}")
-        sys.stdout.flush()
-        writer.append_data(im)
-    print("\n\nFinalisation...")
+            writer.append_data(im)
+            bar.update(i)
+
+    print(f"\n\n[{g}~{r}] Finalisation...")
+    if frames >= 1000:
+        print(f'[{lr}!{r}] Selon la taille de votre fichier, cette étape peut prendre un temps plus ou moins long, n\'hésitez pas à aller faire un tour !')
     writer.close()
-    print("Terminé.")
+    print(f"{g}[{r}>{g}] {r}Terminé.")
 
 
 
@@ -34,23 +36,41 @@ while True:
     clear()
     menu()
 
-    path = input(f"\n[{m}>{r}] Chemin d'accès du fichier à convertir (pour quitter, tappez exit): ").replace("\"", "")
+    choix = input(f"\n[{m}>{r}] Choix : ") 
 
-    if path == "exit":
-        os.exit()
+    if choix == "3":
+        os.kill(os.getppid(), 0)
         break
 
-    else:
-
+    elif choix == "1":
+        path = input(f"\n[{m}>{r}] Chemin d'accès du fichier : ").replace("\"", "")
         try:
             imageio.get_reader(path)
 
-            conversion(path, formatFinal.GIF)
+            conversion(path, ".gif")
 
-            time.sleep(2)
+            input(f"\n{m}[{r}>{m}]{r} Appuyez sur ENTREE : ")
 
         except FileNotFoundError as e:
             print('Fichier introuvable.')
             time.sleep(2)
 
-    
+    elif choix == "2":
+        Tk().withdraw()
+        path = askopenfilename(filetypes = [("all video format", ".mp4")])
+        try:
+            imageio.get_reader(path)
+
+            conversion(path, ".gif")
+
+            input(f"\n{m}[{r}>{m}]{r} Appuyez sur ENTREE : ")
+
+        except FileNotFoundError as e:
+            print('Fichier introuvable.')
+            time.sleep(2)
+
+
+
+    else:
+        print('Choix invalide')
+        time.sleep(2)
