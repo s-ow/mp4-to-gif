@@ -4,7 +4,7 @@
 Ce repo est un petit projet que je me suis donné pour m'améliorer en python. Il est vraiment simple mais tout de même pratique.
 N'hésitez pas à me faire des retours !
 
-![image](https://i.imgur.com/0Gq8gt8.png)
+![image](https://i.imgur.com/sA9TEub.png)
 
 ### Lancer le programme
 - Pour le premier lancement :
