@@ -1,6 +1,3 @@
-os
-sys
-time
 imageio
 imageio[ffmpeg]
 colorama
